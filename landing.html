@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gridblitz — a fast 8×8 block puzzle for iPhone</title>
+<meta name="description" content="Gridblitz is a fast, tactile 8×8 block-placement puzzle for iPhone. Fill the grid, clear lines, climb Game Center leaderboards, and unlock skins. Free, offline, no accounts.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Gridblitz — fill the grid, climb the board">
+<meta property="og:description" content="A fast, tactile 8×8 block puzzle for iPhone. Two modes, leaderboards, unlockable skins. Free, offline, no accounts.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0f14'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-16h-8z' fill='%23f2a516'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d0f14'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-16h-8z' fill='%23f2a516'/%3E%3C/svg%3E">
+<noscript><style>.reveal,.sk,.lbrow{opacity:1!important;transform:none!important}</style></noscript>
+<style>
+  :root{
+    --bg:#ffffff; --gray:#f5f5f7; --ink:#1d1d1f; --muted:#6e6e73; --faint:#6e6e73;
+    --line:#d2d2d7; --accent:#9a5d00; --accentBright:#f2a516;
+    --field:#0d0f14; --indigo:#5566e0; --orange:#ec6a35; --gold:#FFCE5C;
+    --navh:52px; --sp:104px;
+    --r-card:18px; --r-sm:16px; --r-inner:12px; --r-screen:36px;
+    --pad-card:26px; --pad-card-sm:16px;
+    --gap-block:52px; --gap-intro:20px;
+    --ease-out:cubic-bezier(.22,.61,.36,1); --ease-soft:cubic-bezier(.4,0,.2,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; -webkit-text-size-adjust:100%; color-scheme:light}
+  body{margin:0; background:var(--bg); color:var(--ink); overflow-x:hidden;
+    font-family:-apple-system,"SF Pro Display","SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5; letter-spacing:-0.01em;}
+  a{color:inherit; text-decoration:none}
+  .wrap{max-width:1040px; margin:0 auto; padding:0 28px}
+  ::selection{background:rgba(242,165,22,.28); color:var(--ink)}
+  .dark ::selection{background:rgba(255,206,92,.35); color:#fff}
+  :where(a,button,.btn,.pill,.lbtab):focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+  .dark a:focus-visible,.btn.gold:focus-visible{outline-color:#fff}
+  section[id],#top{scroll-margin-top:68px}
+
+  nav{position:sticky; top:0; z-index:80; background:rgba(255,255,255,.72);
+      backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px);
+      border-bottom:1px solid rgba(0,0,0,.08); transition:box-shadow .3s var(--ease-soft), border-color .3s}
+  nav.scrolled{border-bottom-color:rgba(0,0,0,.1); box-shadow:0 1px 0 rgba(0,0,0,.04), 0 6px 20px -12px rgba(0,0,0,.18)}
+  .navin{max-width:1040px; margin:0 auto; padding:0 28px; height:var(--navh); display:flex; align-items:center; justify-content:space-between}
+  .brand{font-weight:600; font-size:18px; letter-spacing:-0.02em}
+  .brand b{color:var(--accent); font-weight:700}
+  .navlinks{display:flex; align-items:center; gap:24px; font-size:14px; color:var(--muted); letter-spacing:0}
+  .navlinks a.lk:hover,.navlinks a.lk.act{color:var(--ink)}
+  .navlinks .pill{background:var(--ink); color:#fff; padding:6px 15px; border-radius:980px; font-weight:500}
+  .navlinks .pill:hover{opacity:.85; color:#fff}
+
+  .btn{display:inline-flex; align-items:center; gap:10px; background:var(--ink); color:#fff;
+       font-size:17px; font-weight:600; padding:13px 26px; border-radius:980px;
+       transition:opacity .15s var(--ease-soft), transform .2s var(--ease-out)}
+  .btn:hover{opacity:.86; color:#fff} .btn:active{transform:scale(.97)}
+  .btn svg{width:19px; height:19px; fill:#fff}
+  .btn.gold{background:var(--accentBright); color:#2a1b02} .btn.gold svg{fill:#2a1b02} .btn.gold:hover{color:#2a1b02; opacity:.9}
+
+  .eyebrow,.skicker{font-size:15px; font-weight:600; color:var(--accent); margin:0 0 12px; letter-spacing:0}
+  h1{font-size:clamp(42px,7.5vw,78px); font-weight:700; letter-spacing:-0.035em; line-height:1.0; margin:0}
+  .lede{font-size:clamp(19px,2.4vw,24px); color:var(--muted); max-width:24ch; margin:var(--gap-intro) auto 0; font-weight:400}
+  h2{font-size:clamp(30px,4.8vw,52px); font-weight:700; letter-spacing:-0.03em; line-height:1.06; margin:0}
+  .sub2{font-size:clamp(18px,2vw,21px); color:var(--muted); max-width:40ch; margin:var(--gap-intro) auto 0; font-weight:400}
+  .center{text-align:center}
+  section{padding:var(--sp) 0} section.gray{background:var(--gray)}
+
+  .hero{text-align:center; padding:84px 0 88px; position:relative}
+  .glow{position:absolute; top:230px; left:50%; transform:translateX(-50%); width:780px; height:780px; max-width:130vw;
+        background:radial-gradient(closest-side, rgba(242,165,22,.16), rgba(242,165,22,0)); z-index:-1; pointer-events:none;
+        opacity:0; animation:glowIn 1.1s var(--ease-soft) .15s forwards}
+  @keyframes glowIn{to{opacity:1}}
+  .herocta{display:flex; flex-direction:column; align-items:center; gap:12px; margin:34px 0 0}
+  .ctanote{font-size:14px; color:var(--faint); letter-spacing:0}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .floaty{animation:float 6.5s var(--ease-soft) infinite; will-change:transform}
+
+  /* minimal device bezel — the screenshot already carries its own status bar + island */
+  .phonewrap{display:flex; justify-content:center; margin:var(--gap-block) 0 0}
+  .device{position:relative; width:300px; max-width:80vw;
+          background:linear-gradient(152deg,#34353b 0%,#0e0e11 20%,#141417 50%,#0e0e11 80%,#34353b 100%);
+          border-radius:50px; padding:9px;
+          box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),
+            0 0 0 1px rgba(0,0,0,.55),
+            0 50px 70px -30px rgba(0,0,0,.42),
+            0 22px 44px -28px rgba(0,0,0,.30)}
+  .device::before{content:""; position:absolute; left:-2px; top:21%; width:3px; height:5%; border-radius:2px; background:#4a4b52;
+                  box-shadow:0 170% 0 #4a4b52, 0 320% 0 #4a4b52}
+  .device::after{content:""; position:absolute; right:-2px; top:26%; width:3px; height:12%; border-radius:2px; background:#4a4b52}
+  .device .glass{position:relative; width:100%; border-radius:42px; overflow:hidden; display:block; background:#000;
+                 box-shadow:inset 0 0 0 1.5px #050507}
+  .device .glass::after{content:""; position:absolute; inset:0; border-radius:42px; pointer-events:none; z-index:4;
+                        background:linear-gradient(125deg, rgba(255,255,255,.13) 0%, rgba(255,255,255,.03) 16%, rgba(255,255,255,0) 34%)}
+  .device img{display:block; width:100%; height:auto; border-radius:42px; vertical-align:top}
+
+  /* two real phones, side by side, equal width */
+  .twoup{display:grid; grid-template-columns:1fr 1fr; gap:var(--gap-block); margin-top:var(--gap-block); align-items:start; justify-items:center}
+  .shotcol{display:flex; flex-direction:column; align-items:center; width:100%; max-width:300px}
+  .shotcol .device{width:100%; max-width:none}
+  .shotcap{margin-top:22px; text-align:center; display:flex; flex-direction:column; align-items:center}
+  .shotcap .ct{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:800; letter-spacing:.6px; text-transform:uppercase}
+  .shotcap .ct .d{width:9px; height:9px; border-radius:50%}
+  .shotcol.orig .d{background:var(--indigo)} .shotcol.orig .ct{color:var(--indigo)}
+  .shotcol.blitz .d{background:var(--orange)} .shotcol.blitz .ct{color:var(--orange)}
+  .shotcap h3{font-size:21px; font-weight:600; letter-spacing:-0.02em; margin:8px 0 6px}
+  .shotcap p{font-size:15px; color:var(--muted); margin:0 auto; max-width:26ch; line-height:1.5}
+
+  /* how it plays — symmetric 3-up */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:var(--gap-block); text-align:left}
+  .step{padding:var(--pad-card); border-radius:var(--r-card); border:1px solid rgba(0,0,0,.07); background:var(--bg);
+        box-shadow:0 18px 40px -28px rgba(0,0,0,.2); transition:transform .25s var(--ease-out), box-shadow .25s var(--ease-soft)}
+  .step:hover{transform:translateY(-3px); box-shadow:0 26px 50px -28px rgba(0,0,0,.26)}
+  .step .n{font-size:13px; font-weight:800; color:var(--accent); letter-spacing:1px}
+  .step h3{font-size:21px; font-weight:600; letter-spacing:-0.02em; margin:8px 0}
+  .step p{font-size:15px; color:var(--muted); margin:0; line-height:1.55}
+
+  /* leaderboard — restrained card */
+  .lbwrap{max-width:520px; margin:var(--gap-block) auto 0}
+  .lbtabs{display:flex; gap:10px; justify-content:center; margin-bottom:18px}
+  .lbtab{font:inherit; -webkit-appearance:none; appearance:none; font-size:14px; font-weight:600; color:var(--muted); padding:10px 20px; border-radius:980px; border:1px solid var(--line); cursor:pointer; background:var(--bg); letter-spacing:0; touch-action:manipulation;
+         transition:background .2s, color .2s, border-color .2s, transform .12s var(--ease-out)}
+  .lbtab:hover:not(.on){border-color:var(--ink); color:var(--ink)} .lbtab:active{transform:scale(.96)}
+  .lbtab.on{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .lbcard{background:var(--bg); border-radius:var(--r-card); padding:10px; box-shadow:0 24px 50px -30px rgba(0,0,0,.28); border:1px solid rgba(0,0,0,.05)}
+  .lbrow{display:flex; align-items:center; gap:14px; padding:13px 16px; border-radius:var(--r-inner); cursor:default; opacity:0; transform:translateX(-14px);
+         transition:opacity .5s var(--ease-out), transform .5s var(--ease-out), background .3s}
+  .lbrow.in{opacity:1; transform:none}
+  .lbrow.me{background:rgba(242,165,22,.12)} .lbrow:not(.me):hover{background:rgba(0,0,0,.035)}
+  .lbrank{width:24px; text-align:center; font-weight:700; color:var(--faint); font-variant-numeric:tabular-nums}
+  .lbrank.r1{color:#c79200} .lbrank.r2{color:#8c9099} .lbrank.r3{color:#b06b2e} .lbrank.r1,.lbrank.r2,.lbrank.r3{font-weight:800}
+  .lbrow.me .lbrank{color:var(--accent)}
+  .av{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; flex:0 0 auto}
+  .lbname{flex:1; font-weight:500; font-size:15px; letter-spacing:0}
+  .lbscore{font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.01em}
+  .lbnote{margin:14px auto 0; font-size:12px; color:var(--faint); letter-spacing:.2px}
+
+  /* skins — accurate text grid only */
+  .skingrid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:var(--gap-block)}
+  .sk{background:var(--bg); border:1px solid rgba(0,0,0,.06); border-radius:var(--r-card); padding:var(--pad-card-sm); text-align:left; opacity:0; transform:translateY(14px);
+      transition:opacity .5s var(--ease-out), transform .5s var(--ease-out), border-color .25s}
+  .sk.in{opacity:1; transform:none} .sk:hover{transform:translateY(-3px); border-color:rgba(0,0,0,.14)}
+  .skswatch{display:flex; gap:6px; margin-bottom:12px}
+  .skswatch i{flex:1; height:30px; border-radius:6px}
+  .sk h4{margin:0; font-size:15px; font-weight:600}
+  .sk .u{font-size:12px; color:var(--muted); margin-top:3px; letter-spacing:0}
+  .sk .u.skill{color:var(--accent); font-weight:600}
+  .boardline{margin:30px auto 0; max-width:48ch; font-size:15px; color:var(--muted); line-height:1.6}
+  .boardline b{color:var(--ink); font-weight:600}
+
+  /* feature trio */
+  .trio{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:var(--gap-block)}
+  .feat{text-align:center}
+  .feat .ic{width:54px; height:54px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; background:var(--gray); border:1px solid rgba(0,0,0,.05)}
+  .feat .ic svg{width:25px; height:25px}
+  .feat h3{font-size:19px; font-weight:600; margin:0 0 6px} .feat p{font-size:15px; color:var(--muted); margin:0; line-height:1.55}
+
+  .dark{background:var(--field); color:#fff; text-align:center; padding:var(--sp) 0}
+  .dark h2{color:#fff; margin-bottom:0} .dark p{color:#b4b9c4; font-size:clamp(17px,2vw,19px); margin:14px auto 32px; max-width:40ch; line-height:1.45}
+
+  footer{background:var(--gray); color:var(--faint); font-size:13px; padding:40px 0; letter-spacing:0}
+  .footin{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px}
+  footer a{color:var(--muted)} footer a:hover{color:var(--ink)} .flinks a{margin-right:22px}
+
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s var(--ease-out), transform .7s var(--ease-out)}
+  .reveal.in{opacity:1; transform:none}
+
+  @media (max-width:900px){ .skingrid{grid-template-columns:repeat(3,1fr)} .twoup{gap:40px} }
+  @media (max-width:760px){
+    .steps{grid-template-columns:1fr; gap:16px}
+    .trio{grid-template-columns:1fr; gap:18px}
+    .skingrid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:720px){ section{padding:74px 0} .dark{padding:84px 0} }
+  @media (max-width:680px){
+    .navlinks a.lk{display:none} .navlinks .pill{padding:10px 18px; font-size:15px}
+    .twoup{grid-template-columns:1fr; gap:44px} .shotcol{max-width:320px}
+    .hero{padding-top:56px}
+  }
+  @media (max-width:560px){
+    section{padding:58px 0} .dark{padding:74px 0}
+    .hero .device{max-width:74vw} h1{letter-spacing:-0.028em}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important}
+    .floaty{animation:none} .glow{display:none}
+    .reveal{opacity:1; transform:none} .sk{opacity:1; transform:none}
+    .sk:hover,.step:hover{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<nav aria-label="Primary">
+  <div class="navin">
+    <a class="brand" href="#top">Grid<b>blitz</b></a>
+    <div class="navlinks">
+      <a class="lk" href="#how">How it plays</a>
+      <a class="lk" href="#modes">Modes</a>
+      <a class="lk" href="#leaderboard">Leaderboard</a>
+      <a class="lk" href="#skins">Skins</a>
+      <a class="pill" href="https://apps.apple.com/us/app/gridblitz-block-puzzle/id6777056439" target="_blank" rel="noopener">Download</a>
+    </div>
+  </div>
+</nav>
+
+<div id="top" class="wrap">
+  <header class="hero">
+    <div class="glow"></div>
+    <p class="eyebrow">Puzzle · iPhone</p>
+    <h1 aria-label="Gridblitz — fill the grid, climb the board.">Fill the grid.<br>Climb the board.</h1>
+    <p class="lede">A fast, tactile 8×8 block puzzle for iPhone.</p>
+    <div class="herocta">
+      <a class="btn" href="https://apps.apple.com/us/app/gridblitz-block-puzzle/id6777056439" target="_blank" rel="noopener">
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        Download on the App&nbsp;Store
+      </a>
+      <span class="ctanote">Free · iPhone · iOS&nbsp;17+</span>
+    </div>
+    <div class="phonewrap reveal">
+      <div class="device floaty">
+        <div class="glass">
+          <img src="shots/menu.jpg" width="760" height="1651" loading="eager"
+               alt="Gridblitz main menu — the GRID BLITZ wordmark with a bolt, a best score of 48 200, and tiles for the Original and Blitz modes.">
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<section id="how" class="center">
+  <div class="wrap">
+    <p class="skicker reveal">How it plays</p>
+    <h2 class="reveal">Three pieces. One board.</h2>
+    <p class="sub2 reveal">Place the pieces where they fit. Fill a full row or column and it clears.</p>
+    <div class="steps reveal">
+      <div class="step"><div class="n">01</div><h3>Drag pieces in</h3><p>Three pieces wait in the tray. Drop each one where it fits on the 8×8 board. No rotation — just placement.</p></div>
+      <div class="step"><div class="n">02</div><h3>Complete a line</h3><p>Fill a whole row or column and it clears, opening up space for your next move.</p></div>
+      <div class="step"><div class="n">03</div><h3>Keep the board open</h3><p>Clear lines back-to-back to raise the multiplier. The game ends when no piece fits.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="modes" class="gray center">
+  <div class="wrap">
+    <p class="skicker reveal">Two modes</p>
+    <h2 class="reveal">Two ways to play.</h2>
+    <div class="twoup reveal">
+      <div class="shotcol orig">
+        <div class="device">
+          <div class="glass">
+            <img src="shots/original.jpg" width="760" height="1651" loading="lazy"
+                 alt="Gridblitz Original mode gameplay — score 12 840, multiplier ×3, best 48 200.">
+          </div>
+        </div>
+        <div class="shotcap">
+          <span class="ct"><span class="d"></span>Original</span>
+          <h3>Untimed</h3>
+          <p>No clock. Take your time and read the board.</p>
+        </div>
+      </div>
+      <div class="shotcol blitz">
+        <div class="device">
+          <div class="glass">
+            <img src="shots/blitz.jpg" width="760" height="1651" loading="lazy"
+                 alt="Gridblitz Blitz mode gameplay — score 9 180, multiplier ×4, a countdown timer reading 8.4 seconds.">
+          </div>
+        </div>
+        <div class="shotcap">
+          <span class="ct"><span class="d"></span>Blitz</span>
+          <h3>Timed</h3>
+          <p>Ten seconds a piece. The timer drains on every move.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="leaderboard" class="center">
+  <div class="wrap">
+    <p class="skicker reveal">Game Center</p>
+    <h2 class="reveal">Climb the leaderboard.</h2>
+    <p class="sub2 reveal">Separate boards for Original and Blitz. Submit your best score and see where it ranks.</p>
+    <div class="lbwrap reveal">
+      <div class="lbtabs" role="group" aria-label="Leaderboard mode">
+        <button type="button" class="lbtab on" data-lb="blitz" aria-pressed="true">Blitz</button>
+        <button type="button" class="lbtab" data-lb="orig" aria-pressed="false">Original</button>
+      </div>
+      <div class="lbcard" id="lbcard" aria-live="polite"></div>
+      <p class="lbnote">Example leaderboard</p>
+    </div>
+  </div>
+</section>
+
+<section id="skins" class="gray center">
+  <div class="wrap">
+    <p class="skicker reveal">Skins</p>
+    <h2 class="reveal">Eight block skins. Six boards.</h2>
+    <p class="sub2 reveal">Some unlock at score milestones; others by watching an optional rewarded ad. There's no in-game currency.</p>
+
+    <div class="skingrid" id="skinGrid"></div>
+
+    <p class="boardline reveal">Six board themes to match: <b>Midnight</b>, <b>Tidepool</b>, <b>Canopy</b>, <b>Ember</b>, <b>Graphite</b>, and <b>Aurora</b>.</p>
+  </div>
+</section>
+
+<section class="center">
+  <div class="wrap">
+    <p class="skicker reveal">The basics</p>
+    <h2 class="reveal">Free, offline, no accounts.</h2>
+    <div class="trio reveal">
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg></div>
+        <h3>Plays fully offline</h3>
+        <p>No connection needed, no accounts, no sign-ups. Open it and play.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 18 0"/><rect x="3" y="12" width="4" height="8" rx="1.5"/><rect x="17" y="12" width="4" height="8" rx="1.5"/></svg></div>
+        <h3>Your music keeps playing</h3>
+        <p>Gridblitz never takes over your audio. Your playlist or podcast keeps playing.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg></div>
+        <h3>No forced ads</h3>
+        <p>The only ad is one you can choose to watch to revive once after a game ends.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dark">
+  <div class="wrap">
+    <h2 class="reveal">Get Gridblitz.</h2>
+    <p class="reveal">Free on iPhone. Two modes, leaderboards, and unlockable skins.</p>
+    <a class="btn gold reveal" href="https://apps.apple.com/us/app/gridblitz-block-puzzle/id6777056439" target="_blank" rel="noopener">
+      <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+      Download on the App&nbsp;Store
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footin">
+    <div class="flinks">
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="support.html">Support</a>
+    </div>
+    <div>© Gridblitz 2026</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* leaderboard — illustrative, restrained (no rank-up badges).
+     DATA must remain a trusted hard-coded literal: values are interpolated into innerHTML below. */
+  var DATA={
+    blitz:[['Aria_K',12840,'#e8743a'],['mxnt',10570,'#46c8a0'],['viktor.s',9120,'#6e78e0'],['You',7460,'#9a5d00','me'],['lina_pkr',6380,'#f2b33a'],['dropz',5210,'#a8c83c'],['nova__',4490,'#ec6a35']],
+    orig:[['quill',24180,'#6e78e0'],['Aria_K',21050,'#e8743a'],['m_berg',18320,'#46c8a0'],['You',15735,'#9a5d00','me'],['sora.q',13640,'#f2b33a'],['petter',11270,'#a8c83c'],['kdireo',9810,'#ec6a35']]
+  };
+  var lbcard=document.getElementById('lbcard');
+  function renderLb(key){
+    lbcard.innerHTML='';
+    DATA[key].forEach(function(r,i){
+      var row=document.createElement('div'); row.className='lbrow'+(r[3]==='me'?' me':'');
+      var ini=r[0]==='You'?'★':r[0][0].toUpperCase();
+      row.innerHTML='<span class="lbrank r'+(i+1)+'">'+(i+1)+'</span>'+
+        '<span class="av" style="background:'+r[2]+'">'+ini+'</span>'+
+        '<span class="lbname">'+r[0]+'</span>'+
+        '<span class="lbscore">'+r[1].toLocaleString('en-US')+'</span>';
+      lbcard.appendChild(row);
+      if(RM){ row.classList.add('in'); } else { setTimeout(function(){ row.classList.add('in'); }, Math.min(i,6)*55); }
+    });
+  }
+  var tabs=[].slice.call(document.querySelectorAll('.lbtab'));
+  tabs.forEach(function(t){ t.addEventListener('click',function(){
+    tabs.forEach(function(x){ x.classList.remove('on'); x.setAttribute('aria-pressed','false'); });
+    t.classList.add('on'); t.setAttribute('aria-pressed','true'); renderLb(t.getAttribute('data-lb')); }); });
+  function activeLb(){ var on=document.querySelector('.lbtab.on'); return on?on.getAttribute('data-lb'):'blitz'; }
+  new IntersectionObserver(function(e,obs){ if(e[0].isIntersecting){ renderLb(activeLb()); obs.disconnect(); }},{threshold:.12, rootMargin:'0px 0px -10% 0px'}).observe(lbcard);
+
+  /* skin grid — accurate names + unlock conditions */
+  var GRID=[
+    {n:'Prism',c:['#F2B33A','#46C8A0','#6E78E0','#E8743A'],u:'Start',k:0},
+    {n:'Opal Drift',c:['#F4C9DB','#D8F0CF','#BFE6F2','#CDB8E6'],u:'2 rewarded ads',k:0},
+    {n:'Abyss Light',c:['#0C2A40','#0E1A26','#22122F','#2FE6D8'],u:'3 rewarded ads',k:0},
+    {n:'Amber Resin',c:['#C25A28','#E08A22','#F0B43C','#6E5828'],u:'Score 2,500',k:1},
+    {n:'Coral Reef',c:['#FF6F5E','#FFB983','#6FD0AE','#4FC2C9'],u:'Score 10,000',k:1},
+    {n:'Glacier Halo',c:['#EAF6FB','#BFE4F0','#9AD0E6','#6FB6D2'],u:'Score 30,000',k:1},
+    {n:'Nebula Bloom',c:['#6A3FD0','#B07AF0','#C16BE0','#3A1E66'],u:'Score 100,000',k:1},
+    {n:'Borealis',c:['#F2D27A','#5BFF8C','#1FE0A0','#0B143A'],u:'Score 1,000,000',k:1}
+  ];
+  var sg=document.getElementById('skinGrid');
+  var skObs=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); skObs.unobserve(en.target);} }); },{threshold:.15});
+  GRID.forEach(function(s,i){ var d=document.createElement('div'); d.className='sk'; if(!RM) d.style.transitionDelay=(i*45)+'ms';
+    d.innerHTML='<div class="skswatch">'+s.c.map(function(x){return '<i style="background:'+x+'"></i>';}).join('')+'</div><h4>'+s.n+'</h4><div class="u'+(s.k?' skill':'')+'">'+s.u+'</div>';
+    sg.appendChild(d); skObs.observe(d); });
+
+  /* reveal */
+  var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} }); },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(n){ io.observe(n); });
+
+  /* nav elevation, rAF-throttled */
+  var navEl=document.querySelector('nav');
+  function onScroll(){ navEl.classList.toggle('scrolled', window.scrollY>8); }
+  var ticking=false;
+  function sched(){ if(ticking)return; ticking=true; requestAnimationFrame(function(){ onScroll(); ticking=false; }); }
+  window.addEventListener('scroll',sched,{passive:true});
+  window.addEventListener('resize',sched,{passive:true});
+  onScroll();
+
+  /* nav active-section spy */
+  var navlinks=[].slice.call(document.querySelectorAll('.navlinks a.lk'));
+  var spy=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){
+      navlinks.forEach(function(a){ a.classList.toggle('act', a.getAttribute('href')==='#'+en.target.id); }); } }); },{rootMargin:'-45% 0px -50% 0px'});
+  ['how','modes','leaderboard','skins'].forEach(function(id){ var el=document.getElementById(id); if(el) spy.observe(el); });
+})();
+</script>
+</body>
+</html>
