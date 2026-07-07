@@ -4,22 +4,761 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gridblitz — a fast 8×8 block puzzle for iPhone</title>
-<meta name="description" content="Gridblitz is a fast, tactile 8×8 block-placement puzzle for iPhone. Fill the grid, clear lines, climb Game Center leaderboards, and unlock skins. Free, offline, no accounts.">
-<link rel="canonical" href="landing.html">
-<meta http-equiv="refresh" content="0; url=landing.html">
-<script>location.replace('landing.html');</script>
+<meta name="description" content="Gridblitz is a fast, tactile 8×8 block-placement puzzle for iPhone. Two modes, Game Center leaderboards, eleven unlockable block skins and eight boards. Free, offline, no accounts.">
+<link rel="canonical" href="https://ponken1.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ponken1.github.io/">
+<meta property="og:title" content="Gridblitz — fill the grid, beat your best">
+<meta property="og:description" content="A fast, tactile 8×8 block puzzle for iPhone. Two modes, leaderboards, unlockable skins. Free, offline, no accounts.">
+<meta property="og:image" content="https://ponken1.github.io/shots/menu.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0f14'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-16h-8z' fill='%23f2a516'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d0f14'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-16h-8z' fill='%23f2a516'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "VideoGame",
+  "name": "Gridblitz - Block Puzzle",
+  "alternateName": "Gridblitz",
+  "url": "https://ponken1.github.io/",
+  "image": "https://ponken1.github.io/shots/menu.jpg",
+  "operatingSystem": "iOS 17.0 or later",
+  "gamePlatform": "iPhone",
+  "applicationCategory": "GameApplication",
+  "genre": ["Puzzle", "Board"],
+  "author": {"@type": "Person", "name": "Viggo Roseberg"},
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "installUrl": "https://apps.apple.com/us/app/gridblitz-block-puzzle/id6777056439"
+}
+</script>
+<noscript><style>.reveal,.sk,.bd,.lbrow{opacity:1!important;transform:none!important} .demo{display:none!important} .hero{padding-bottom:40px}</style></noscript>
 <style>
-  body { font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
-         max-width: 640px; margin: 80px auto; padding: 0 20px; text-align: center;
-         color: #1d1d1f; }
-  h1 { font-size: 2.2rem; letter-spacing: -0.02em; }
-  h1 b { color: #9a5d00; }
-  a { color: #9a5d00; font-weight: 600; }
+  :root{
+    --bg:#ffffff; --gray:#f5f5f7; --ink:#1d1d1f; --muted:#6e6e73; --faint:#86868b;
+    --line:#d2d2d7; --accent:#9a5d00; --accentBright:#f2a516;
+    --field:#0d0f14; --board:#14161c; --well:rgba(0,0,0,.30);
+    --indigo:#5566e0; --orange:#ec6a35;
+    --navh:52px; --sp:110px;
+    --r-card:18px; --r-sm:14px; --r-inner:12px;
+    --ease-out:cubic-bezier(.22,.61,.36,1); --ease-soft:cubic-bezier(.4,0,.2,1);
+    --ease-place:cubic-bezier(.30,.70,.30,1);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; -webkit-text-size-adjust:100%; color-scheme:light}
+  body{margin:0; background:var(--bg); color:var(--ink); overflow-x:hidden;
+    font-family:-apple-system,"SF Pro Display","SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5; letter-spacing:-0.01em;}
+  a{color:inherit; text-decoration:none}
+  img{max-width:100%}
+  .wrap{max-width:1064px; margin:0 auto; padding:0 28px}
+  ::selection{background:rgba(242,165,22,.28); color:var(--ink)}
+  .darksec ::selection{background:rgba(255,206,92,.35); color:#fff}
+  :where(a,button,.btn,.pill,.lbtab):focus-visible{outline:2px solid var(--accent); outline-offset:3px}
+  .darksec a:focus-visible,.btn.gold:focus-visible{outline-color:#fff}
+  section[id],#top{scroll-margin-top:68px}
+
+  /* ---------- nav ---------- */
+  nav{position:sticky; top:0; z-index:80; background:rgba(255,255,255,.72);
+      backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px);
+      border-bottom:1px solid rgba(0,0,0,.08); transition:box-shadow .3s var(--ease-soft), border-color .3s}
+  nav.scrolled{border-bottom-color:rgba(0,0,0,.1); box-shadow:0 1px 0 rgba(0,0,0,.04), 0 6px 20px -12px rgba(0,0,0,.18)}
+  .navin{max-width:1064px; margin:0 auto; padding:0 28px; height:var(--navh); display:flex; align-items:center; justify-content:space-between}
+  .brand{font-weight:600; font-size:18px; letter-spacing:-0.02em}
+  .brand b{color:var(--accent); font-weight:700}
+  .navlinks{display:flex; align-items:center; gap:24px; font-size:14px; color:var(--muted); letter-spacing:0}
+  .navlinks a.lk:hover,.navlinks a.lk.act{color:var(--ink)}
+  .navlinks .pill{background:var(--ink); color:#fff; padding:6px 15px; border-radius:980px; font-weight:500}
+  .navlinks .pill:hover{opacity:.85; color:#fff}
+
+  /* ---------- shared type ---------- */
+  .btn{display:inline-flex; align-items:center; gap:10px; background:var(--ink); color:#fff;
+       font-size:17px; font-weight:600; padding:14px 28px; border-radius:980px;
+       transition:opacity .15s var(--ease-soft), transform .2s var(--ease-out)}
+  .btn:hover{opacity:.86; color:#fff} .btn:active{transform:scale(.97)}
+  .btn svg{width:19px; height:19px; fill:#fff}
+  .btn.gold{background:var(--accentBright); color:#2a1b02} .btn.gold svg{fill:#2a1b02} .btn.gold:hover{color:#2a1b02; opacity:.9}
+  .skicker{font-size:15px; font-weight:600; color:var(--accent); margin:0 0 12px; letter-spacing:0}
+  h1{font-size:clamp(44px,7.6vw,84px); font-weight:700; letter-spacing:-0.038em; line-height:1.02; margin:0}
+  h1 .grad{background:linear-gradient(92deg,#b3540a 10%,#f2a516 60%,#ffce5c 95%);
+           -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent}
+  .lede{font-size:clamp(19px,2.4vw,23px); color:var(--muted); max-width:34ch; margin:22px auto 0; font-weight:400}
+  h2{font-size:clamp(30px,4.8vw,54px); font-weight:700; letter-spacing:-0.03em; line-height:1.06; margin:0}
+  .sub2{font-size:clamp(18px,2vw,21px); color:var(--muted); max-width:44ch; margin:20px auto 0; font-weight:400}
+  .center{text-align:center}
+  section{padding:var(--sp) 0} section.gray{background:var(--gray)}
+
+  /* ---------- hero ---------- */
+  .hero{text-align:center; padding:78px 0 96px; position:relative}
+  .glow{position:absolute; top:150px; left:50%; transform:translateX(-50%); width:880px; height:880px; max-width:150vw;
+        background:radial-gradient(closest-side, rgba(242,165,22,.15), rgba(242,165,22,0) 70%); z-index:-1; pointer-events:none;
+        opacity:0; animation:glowIn 1.2s var(--ease-soft) .1s forwards}
+  .glow2{position:absolute; top:420px; left:calc(50% - 480px); width:560px; height:560px;
+        background:radial-gradient(closest-side, rgba(85,102,224,.10), rgba(85,102,224,0) 70%); z-index:-1; pointer-events:none;
+        opacity:0; animation:glowIn 1.2s var(--ease-soft) .3s forwards}
+  @keyframes glowIn{to{opacity:1}}
+  .eyebrow{display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:600; color:var(--accent);
+        border:1px solid rgba(154,93,0,.25); background:rgba(242,165,22,.08); padding:6px 14px; border-radius:980px; margin:0 0 22px; letter-spacing:.2px}
+  .herocta{display:flex; flex-direction:column; align-items:center; gap:12px; margin:34px 0 0}
+  .ctanote{font-size:14px; color:var(--faint); letter-spacing:0}
+
+  /* ---------- live demo board ---------- */
+  .demo{position:relative; width:min(88vw,392px); margin:64px auto 0; text-align:initial}
+  .boardcard{position:relative; background:
+        radial-gradient(120% 90% at 18% 0%, rgba(96,84,182,.28), transparent 55%),
+        radial-gradient(110% 80% at 88% 100%, rgba(236,106,53,.14), transparent 55%),
+        var(--board);
+      border:1px solid rgba(255,255,255,.09); border-radius:24px; padding:16px;
+      box-shadow:0 60px 90px -44px rgba(13,15,20,.55), 0 24px 48px -30px rgba(13,15,20,.45), inset 0 1px 0 rgba(255,255,255,.06)}
+  .hud{display:flex; align-items:baseline; gap:10px; padding:2px 4px 12px; color:#fff}
+  .hud .lab{font-size:10px; font-weight:800; letter-spacing:1.4px; color:rgba(255,255,255,.44)}
+  .hud .score{font-size:24px; font-weight:800; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; line-height:1}
+  .hud .mult{font-size:12px; font-weight:800; color:#2a1b02; background:var(--accentBright); border-radius:980px; padding:3px 9px;
+             opacity:0; transform:scale(.6); transition:opacity .25s var(--ease-out), transform .3s var(--ease-out)}
+  .hud .mult.on{opacity:1; transform:none}
+  .hud .best{margin-left:auto; font-size:11px; font-weight:700; color:rgba(255,255,255,.40); letter-spacing:.4px; font-variant-numeric:tabular-nums}
+  .gridbox{position:relative}
+  .grid{display:grid; grid-template-columns:repeat(8,1fr); gap:3px}
+  .cell{aspect-ratio:1; background:var(--well); border-radius:2.5px; transition:transform .22s var(--ease-out), opacity .22s var(--ease-out)}
+  .cell.f{border-radius:16%; background:var(--c,#888);
+          box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.18), inset 0 -2px 0 rgba(0,0,0,.10)}
+  .cell.pop{animation:pop .26s var(--ease-out)}
+  @keyframes pop{0%{transform:scale(1.22)}100%{transform:scale(1)}}
+  .cell.clr{transform:scale(.12); opacity:0}
+  .flash{position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; border-radius:4px}
+  .flash.on{animation:flashA .32s var(--ease-soft)}
+  @keyframes flashA{0%{opacity:.22}100%{opacity:0}}
+  .ring{position:absolute; width:22px; height:22px; border:2.5px solid rgba(255,206,92,.9); border-radius:50%;
+        transform:translate(-50%,-50%) scale(.4); opacity:0; pointer-events:none}
+  .ring.on{animation:ringA .62s var(--ease-out) forwards}
+  @keyframes ringA{0%{opacity:.95; transform:translate(-50%,-50%) scale(.4)}100%{opacity:0; transform:translate(-50%,-50%) scale(15)}}
+  .floater{position:absolute; font-weight:800; font-size:17px; color:#ffce5c; text-shadow:0 2px 12px rgba(0,0,0,.5);
+           transform:translate(-50%,0); opacity:0; pointer-events:none; letter-spacing:-0.01em}
+  .floater.on{animation:floatUp 1s var(--ease-out) forwards}
+  @keyframes floatUp{0%{opacity:0; transform:translate(-50%,6px)}18%{opacity:1}100%{opacity:0; transform:translate(-50%,-30px)}}
+  .tray{display:flex; justify-content:space-around; align-items:center; gap:10px; margin-top:14px; padding:12px 6px 4px;
+        border-top:1px solid rgba(255,255,255,.07); min-height:56px}
+  .slot{display:grid; gap:2px; transition:opacity .3s var(--ease-soft)}
+  .slot.used{opacity:.14}
+  .slot i{width:13px; height:13px; border-radius:3px; background:var(--c);
+          box-shadow:inset 0 0 0 1px rgba(0,0,0,.16)}
+  .slot i.e{background:transparent; box-shadow:none}
+  .fly{position:absolute; display:grid; gap:3px; z-index:5; pointer-events:none;
+       transition:transform .5s var(--ease-place); will-change:transform}
+  .fly i{border-radius:16%; background:var(--c); box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.18), inset 0 -2px 0 rgba(0,0,0,.10)}
+  .demolabel{text-align:center; margin:18px 0 0; font-size:13px; color:var(--faint); letter-spacing:.2px}
+
+  /* floating decorative pieces */
+  .fpiece{position:absolute; display:grid; gap:5px; z-index:-1; opacity:.9; filter:drop-shadow(0 18px 22px rgba(13,15,20,.16))}
+  .fpiece i{width:30px; height:30px; border-radius:6px; background:var(--c); box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.14), inset 0 -2px 0 rgba(0,0,0,.08)}
+  .fpiece i.e{background:transparent; box-shadow:none}
+  .fp1{left:calc(50% - 420px); top:560px; grid-template-columns:repeat(2,30px); animation:bob 7s var(--ease-soft) infinite}
+  .fp2{left:calc(50% + 300px); top:660px; grid-template-columns:repeat(2,30px); animation:bob 8.5s var(--ease-soft) 1.2s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(2deg)}}
+  @media (max-width:1080px){.fpiece{display:none}}
+
+  /* ---------- how it plays ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:56px; text-align:left}
+  .step{padding:28px; border-radius:var(--r-card); border:1px solid rgba(0,0,0,.07); background:var(--bg);
+        box-shadow:0 18px 40px -28px rgba(0,0,0,.2); transition:transform .25s var(--ease-out), box-shadow .25s var(--ease-soft)}
+  .step:hover{transform:translateY(-3px); box-shadow:0 26px 50px -28px rgba(0,0,0,.26)}
+  .step .n{font-size:13px; font-weight:800; color:var(--accent); letter-spacing:1px}
+  .step h3{font-size:21px; font-weight:600; letter-spacing:-0.02em; margin:8px 0}
+  .step p{font-size:15px; color:var(--muted); margin:0; line-height:1.55}
+
+  /* ---------- modes / phones ---------- */
+  .twoup{display:grid; grid-template-columns:1fr 1fr; gap:56px; margin-top:56px; align-items:start; justify-items:center}
+  .shotcol{display:flex; flex-direction:column; align-items:center; width:100%; max-width:300px}
+  .device{position:relative; width:100%;
+          background:linear-gradient(152deg,#34353b 0%,#0e0e11 20%,#141417 50%,#0e0e11 80%,#34353b 100%);
+          border-radius:50px; padding:9px;
+          box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),
+            0 0 0 1px rgba(0,0,0,.55),
+            0 50px 70px -30px rgba(0,0,0,.42),
+            0 22px 44px -28px rgba(0,0,0,.30)}
+  .device::before{content:""; position:absolute; left:-2px; top:21%; width:3px; height:5%; border-radius:2px; background:#4a4b52;
+                  box-shadow:0 170% 0 #4a4b52, 0 320% 0 #4a4b52}
+  .device::after{content:""; position:absolute; right:-2px; top:26%; width:3px; height:12%; border-radius:2px; background:#4a4b52}
+  .device .glass{position:relative; width:100%; border-radius:42px; overflow:hidden; display:block; background:#000;
+                 box-shadow:inset 0 0 0 1.5px #050507}
+  .device .glass::after{content:""; position:absolute; inset:0; border-radius:42px; pointer-events:none; z-index:4;
+                        background:linear-gradient(125deg, rgba(255,255,255,.13) 0%, rgba(255,255,255,.03) 16%, rgba(255,255,255,0) 34%)}
+  .device img{display:block; width:100%; height:auto; border-radius:42px; vertical-align:top}
+  .shotcap{margin-top:22px; text-align:center; display:flex; flex-direction:column; align-items:center}
+  .shotcap .ct{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:800; letter-spacing:.6px; text-transform:uppercase}
+  .shotcap .ct .d{width:9px; height:9px; border-radius:50%}
+  .shotcol.orig .d{background:var(--indigo)} .shotcol.orig .ct{color:var(--indigo)}
+  .shotcol.blitz .d{background:var(--orange)} .shotcol.blitz .ct{color:var(--orange)}
+  .shotcap h3{font-size:21px; font-weight:600; letter-spacing:-0.02em; margin:8px 0 6px}
+  .shotcap p{font-size:15px; color:var(--muted); margin:0 auto; max-width:26ch; line-height:1.5}
+
+  /* ---------- leaderboard ---------- */
+  .lbwrap{max-width:520px; margin:56px auto 0}
+  .lbtabs{display:flex; gap:10px; justify-content:center; margin-bottom:18px}
+  .lbtab{font:inherit; -webkit-appearance:none; appearance:none; font-size:14px; font-weight:600; color:var(--muted); padding:10px 20px; border-radius:980px; border:1px solid var(--line); cursor:pointer; background:var(--bg); letter-spacing:0; touch-action:manipulation;
+         transition:background .2s, color .2s, border-color .2s, transform .12s var(--ease-out)}
+  .lbtab:hover:not(.on){border-color:var(--ink); color:var(--ink)} .lbtab:active{transform:scale(.96)}
+  .lbtab.on{background:var(--ink); color:#fff; border-color:var(--ink)}
+  .lbcard{background:var(--bg); border-radius:var(--r-card); padding:10px; box-shadow:0 24px 50px -30px rgba(0,0,0,.28); border:1px solid rgba(0,0,0,.05)}
+  .lbrow{display:flex; align-items:center; gap:14px; padding:13px 16px; border-radius:var(--r-inner); cursor:default; opacity:0; transform:translateX(-14px);
+         transition:opacity .5s var(--ease-out), transform .5s var(--ease-out), background .3s}
+  .lbrow.in{opacity:1; transform:none}
+  .lbrow.me{background:rgba(242,165,22,.12)} .lbrow:not(.me):hover{background:rgba(0,0,0,.035)}
+  .lbrank{width:24px; text-align:center; font-weight:700; color:var(--faint); font-variant-numeric:tabular-nums}
+  .lbrank.r1{color:#c79200} .lbrank.r2{color:#8c9099} .lbrank.r3{color:#b06b2e} .lbrank.r1,.lbrank.r2,.lbrank.r3{font-weight:800}
+  .lbrow.me .lbrank{color:var(--accent)}
+  .av{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; color:#fff; flex:0 0 auto}
+  .lbname{flex:1; font-weight:500; font-size:15px; letter-spacing:0}
+  .lbscore{font-weight:700; font-variant-numeric:tabular-nums; letter-spacing:-0.01em}
+  .lbnote{margin:14px auto 0; font-size:12px; color:var(--faint); letter-spacing:.2px}
+
+  /* ---------- skins ---------- */
+  .skingrid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:56px}
+  .sk{position:relative; background:var(--bg); border:1px solid rgba(0,0,0,.06); border-radius:var(--r-card); padding:16px; text-align:left; opacity:0; transform:translateY(14px);
+      transition:opacity .5s var(--ease-out), transform .5s var(--ease-out), border-color .25s}
+  .sk.in{opacity:1; transform:none} .sk:hover{transform:translateY(-3px); border-color:rgba(0,0,0,.14)}
+  .skswatch{display:flex; gap:6px; margin-bottom:12px}
+  .skswatch i{flex:1; height:32px; border-radius:6px}
+  .sk h4{margin:0; font-size:15px; font-weight:600; letter-spacing:0}
+  .sk .u{font-size:12px; color:var(--muted); margin-top:3px; letter-spacing:0}
+  .sk .u.skill{color:var(--accent); font-weight:600}
+  .sk .u.pro{color:#8a6100; font-weight:700}
+  .protag{position:absolute; top:12px; right:12px; font-size:9.5px; font-weight:800; letter-spacing:.8px; color:#2a1b02;
+          background:linear-gradient(120deg,#ffce5c,#f2a516); padding:3px 8px; border-radius:980px}
+  .bdgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:22px}
+  .bd{position:relative; background:var(--bg); border:1px solid rgba(0,0,0,.06); border-radius:var(--r-card); padding:16px; text-align:left; opacity:0; transform:translateY(14px);
+      transition:opacity .5s var(--ease-out), transform .5s var(--ease-out), border-color .25s}
+  .bd.in{opacity:1; transform:none} .bd:hover{transform:translateY(-3px); border-color:rgba(0,0,0,.14)}
+  .bdsw{height:52px; border-radius:10px; margin-bottom:12px; border:1px solid rgba(0,0,0,.08)}
+  .bd h4{margin:0; font-size:15px; font-weight:600} .bd .u{font-size:12px; color:var(--muted); margin-top:3px}
+  .bd .u.skill{color:var(--accent); font-weight:600}
+  .subline{margin:44px auto 0; max-width:52ch; font-size:15px; color:var(--muted); line-height:1.6}
+
+  /* ---------- pro band ---------- */
+  .proband{max-width:820px; margin:0 auto; border-radius:26px; padding:56px 40px; text-align:center; color:#fff; position:relative; overflow:hidden;
+           background:
+             radial-gradient(120% 130% at 14% 0%, rgba(96,84,182,.5), transparent 55%),
+             radial-gradient(110% 120% at 90% 100%, rgba(236,106,53,.32), transparent 55%),
+             #0d0f14;
+           border:1px solid rgba(255,255,255,.08); box-shadow:0 50px 90px -50px rgba(13,15,20,.6)}
+  .proband .pmark{font-size:13px; font-weight:800; letter-spacing:2.5px; color:#ffce5c; margin:0 0 14px}
+  .proband h2{color:#fff}
+  .proband p{color:#c6cad4; font-size:clamp(16px,2vw,18px); max-width:52ch; margin:16px auto 0; line-height:1.55}
+  .proband .pnote{font-size:13px; color:#8d93a1; margin-top:22px}
+
+  /* ---------- feature trio ---------- */
+  .trio{display:grid; grid-template-columns:repeat(3,1fr); gap:24px; margin-top:56px}
+  .feat{text-align:center}
+  .feat .ic{width:54px; height:54px; border-radius:var(--r-sm); display:flex; align-items:center; justify-content:center; margin:0 auto 16px; background:var(--gray); border:1px solid rgba(0,0,0,.05)}
+  .feat .ic svg{width:25px; height:25px}
+  .feat h3{font-size:19px; font-weight:600; margin:0 0 6px} .feat p{font-size:15px; color:var(--muted); margin:0; line-height:1.55}
+
+  /* ---------- dark CTA ---------- */
+  .darksec{background:
+      radial-gradient(90% 70% at 50% 115%, rgba(242,165,22,.16), transparent 60%),
+      var(--field);
+      color:#fff; text-align:center; padding:calc(var(--sp) + 8px) 0; position:relative; overflow:hidden}
+  .darksec .wm{line-height:.9; margin-bottom:26px}
+  .darksec .wm .g{display:block; font-size:15px; font-weight:700; letter-spacing:10px; color:#b4b9c4; text-indent:10px}
+  .darksec .wm .b{display:block; font-size:clamp(46px,7vw,72px); font-weight:800; letter-spacing:-0.02em;
+      background:linear-gradient(100deg,#ffce5c 0%,#f2a516 55%,#ec6a35 105%);
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent}
+  .darksec p{color:#b4b9c4; font-size:clamp(17px,2vw,19px); margin:0 auto 34px; max-width:40ch; line-height:1.45}
+
+  footer{background:var(--gray); color:var(--faint); font-size:13px; padding:40px 0; letter-spacing:0}
+  .footin{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px}
+  footer a{color:var(--muted)} footer a:hover{color:var(--ink)} .flinks a{margin-right:22px}
+
+  .reveal{opacity:0; transform:translateY(26px); transition:opacity .7s var(--ease-out), transform .7s var(--ease-out)}
+  .reveal.in{opacity:1; transform:none}
+
+  @media (max-width:900px){ .skingrid,.bdgrid{grid-template-columns:repeat(3,1fr)} .twoup{gap:40px} }
+  @media (max-width:760px){
+    .steps{grid-template-columns:1fr; gap:16px}
+    .trio{grid-template-columns:1fr; gap:18px}
+    .skingrid,.bdgrid{grid-template-columns:repeat(2,1fr)}
+    .proband{padding:44px 24px}
+  }
+  @media (max-width:720px){ section{padding:78px 0} .darksec{padding:88px 0} }
+  @media (max-width:680px){
+    .navlinks a.lk{display:none} .navlinks .pill{padding:10px 18px; font-size:15px}
+    .twoup{grid-template-columns:1fr; gap:44px} .shotcol{max-width:320px}
+    .hero{padding-top:52px}
+  }
+  @media (max-width:560px){ section{padding:62px 0} .darksec{padding:78px 0} h1{letter-spacing:-0.03em} }
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important}
+    .glow,.glow2{opacity:1} .fpiece{animation:none}
+    .reveal,.sk,.bd{opacity:1; transform:none}
+    .sk:hover,.step:hover,.bd:hover{transform:none}
+  }
 </style>
 </head>
 <body>
-<h1>Grid<b>blitz</b></h1>
-<p>Taking you to the Gridblitz home page&hellip;</p>
-<p><a href="landing.html">Continue &rarr;</a></p>
+
+<nav aria-label="Primary">
+  <div class="navin">
+    <a class="brand" href="#top">Grid<b>blitz</b></a>
+    <div class="navlinks">
+      <a class="lk" href="#how">How it plays</a>
+      <a class="lk" href="#modes">Modes</a>
+      <a class="lk" href="#skins">Skins</a>
+      <a class="lk" href="#pro">Pro</a>
+      <a class="pill" href="https://apps.apple.com/us/app/gridblitz-block-puzzle/id6777056439" target="_blank" rel="noopener">Download</a>
+    </div>
+  </div>
+</nav>
+
+<div id="top" class="wrap">
+  <header class="hero">
+    <div class="glow"></div><div class="glow2"></div>
+    <div class="fpiece fp1" aria-hidden="true"><i style="--c:#FF9429"></i><i class="e"></i><i style="--c:#FF9429"></i><i style="--c:#FF9429"></i></div>
+    <div class="fpiece fp2" aria-hidden="true"><i style="--c:#4DD9C7"></i><i style="--c:#4DD9C7"></i><i style="--c:#4DD9C7"></i><i style="--c:#4DD9C7"></i></div>
+    <p class="eyebrow">Puzzle · iPhone · Free</p>
+    <h1>Fill the grid.<br><span class="grad">Beat your best.</span></h1>
+    <p class="lede">A fast, tactile 8×8 block puzzle. Place pieces, clear lines, and stack combos into massive runs.</p>
+    <div class="herocta">
+      <a class="btn" href="https://apps.apple.com/us/app/gridblitz-block-puzzle/id6777056439" target="_blank" rel="noopener">
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        Download on the App&nbsp;Store
+      </a>
+      <span class="ctanote">Free · iPhone · iOS&nbsp;17+ · Plays offline</span>
+    </div>
+
+    <div class="demo" id="demo" aria-label="Animated demonstration of Gridblitz gameplay: pieces placed on an 8 by 8 board, completed lines clear and the score rises" role="img">
+      <div class="boardcard">
+        <div class="hud">
+          <div><div class="lab">SCORE</div><div class="score" id="dScore">12,480</div></div>
+          <span class="mult" id="dMult">×2</span>
+          <span class="best">BEST&nbsp;&nbsp;48,200</span>
+        </div>
+        <div class="gridbox">
+          <div class="grid" id="dGrid"></div>
+          <div class="flash" id="dFlash"></div>
+        </div>
+        <div class="tray" id="dTray"></div>
+      </div>
+    </div>
+    <p class="demolabel">Fill a row or column — it clears, and back-to-back clears multiply.</p>
+  </header>
+</div>
+
+<section id="how" class="center">
+  <div class="wrap">
+    <p class="skicker reveal">How it plays</p>
+    <h2 class="reveal">Three pieces. One board.</h2>
+    <p class="sub2 reveal">Easy to read, hard to put down — every move is one decision that matters.</p>
+    <div class="steps reveal">
+      <div class="step"><div class="n">01</div><h3>Drag pieces in</h3><p>Three pieces wait in the tray. Drop each one where it fits on the 8×8 board. No rotation — placement is the whole game.</p></div>
+      <div class="step"><div class="n">02</div><h3>Fill a line</h3><p>Complete a whole row or column and it clears with a radial shatter, opening up space for your next move.</p></div>
+      <div class="step"><div class="n">03</div><h3>Ride the multiplier</h3><p>Clear on back-to-back moves and the multiplier climbs — there's no ceiling, so a hot streak can snowball into a massive run.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="modes" class="gray center">
+  <div class="wrap">
+    <p class="skicker reveal">Two modes</p>
+    <h2 class="reveal">Two ways to play.</h2>
+    <div class="twoup reveal">
+      <div class="shotcol orig">
+        <div class="device">
+          <div class="glass">
+            <img src="shots/original.jpg" width="760" height="1651" loading="lazy"
+                 alt="Gridblitz Original mode gameplay — score 12 840, multiplier ×3, best 48 200.">
+          </div>
+        </div>
+        <div class="shotcap">
+          <span class="ct"><span class="d"></span>Original</span>
+          <h3>Untimed</h3>
+          <p>No clock. Take your time and read the board.</p>
+        </div>
+      </div>
+      <div class="shotcol blitz">
+        <div class="device">
+          <div class="glass">
+            <img src="shots/blitz.jpg" width="760" height="1651" loading="lazy"
+                 alt="Gridblitz Blitz mode gameplay — score 9 180, multiplier ×4, a countdown timer reading 8.4 seconds.">
+          </div>
+        </div>
+        <div class="shotcap">
+          <span class="ct"><span class="d"></span>Blitz</span>
+          <h3>Timed</h3>
+          <p>Ten seconds a piece. Think fast or the run ends.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="leaderboard" class="center">
+  <div class="wrap">
+    <p class="skicker reveal">Game Center</p>
+    <h2 class="reveal">Climb the leaderboard.</h2>
+    <p class="sub2 reveal">Separate boards for Original and Blitz. Submit your best score and see where it ranks.</p>
+    <div class="lbwrap reveal">
+      <div class="lbtabs" role="group" aria-label="Leaderboard mode">
+        <button type="button" class="lbtab on" data-lb="blitz" aria-pressed="true">Blitz</button>
+        <button type="button" class="lbtab" data-lb="orig" aria-pressed="false">Original</button>
+      </div>
+      <div class="lbcard" id="lbcard" aria-live="polite"></div>
+      <p class="lbnote">Example leaderboard</p>
+    </div>
+  </div>
+</section>
+
+<section id="skins" class="gray center">
+  <div class="wrap">
+    <p class="skicker reveal">Make it yours</p>
+    <h2 class="reveal">Eleven block skins.<br>Eight boards.</h2>
+    <p class="sub2 reveal">Earn the flashiest at score milestones, unlock others with an optional rewarded ad — two are Gridblitz&nbsp;Pro exclusives. There's no in-game currency.</p>
+
+    <div class="skingrid" id="skinGrid"></div>
+
+    <p class="subline reveal">Board themes to match — from the default <b>Midnight</b> to the Pro-exclusive <b>Neon&nbsp;Grid</b>:</p>
+    <div class="bdgrid" id="boardGrid"></div>
+  </div>
+</section>
+
+<section id="pro" class="center">
+  <div class="wrap">
+    <div class="proband reveal">
+      <p class="pmark">GRIDBLITZ&nbsp;PRO</p>
+      <h2>One purchase.<br>Yours forever.</h2>
+      <p>Gridblitz Pro unlocks the Soda skin, the full Customizer — build your own block skin and board — the Neon&nbsp;Grid board, and ad-free revives. One small one-time purchase, no subscription.</p>
+      <p class="pnote">Entirely optional — every mode and the whole score ladder stay free.</p>
+    </div>
+  </div>
+</section>
+
+<section class="center">
+  <div class="wrap">
+    <p class="skicker reveal">The basics</p>
+    <h2 class="reveal">Free, offline, no accounts.</h2>
+    <div class="trio reveal">
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg></div>
+        <h3>Plays fully offline</h3>
+        <p>No connection needed, no accounts, no sign-ups. Open it and play.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 18 0"/><rect x="3" y="12" width="4" height="8" rx="1.5"/><rect x="17" y="12" width="4" height="8" rx="1.5"/></svg></div>
+        <h3>Your music keeps playing</h3>
+        <p>Gridblitz never takes over your audio. Your playlist or podcast keeps playing.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg></div>
+        <h3>No forced ads</h3>
+        <p>The only ads are ones you choose to watch — to revive a run or unlock a skin.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="darksec">
+  <div class="wrap">
+    <div class="wm reveal" aria-label="Gridblitz">
+      <span class="g">GRID</span>
+      <span class="b">BLITZ</span>
+    </div>
+    <p class="reveal">Free on iPhone. Two modes, leaderboards, and skins worth chasing.</p>
+    <a class="btn gold reveal" href="https://apps.apple.com/us/app/gridblitz-block-puzzle/id6777056439" target="_blank" rel="noopener">
+      <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+      Download on the App&nbsp;Store
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footin">
+    <div class="flinks">
+      <a href="privacy-policy.html">Privacy</a>
+      <a href="support.html">Support</a>
+    </div>
+    <div>© Gridblitz 2026</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ================= live hero demo =================
+     A scripted, deterministic loop that mirrors real play: pieces fly from
+     the tray onto the board, completed lines clear with a RADIAL pulse
+     (ring from the impact cell + distance-staggered collapse), the score
+     counts up. Pauses offscreen; static under reduced motion. */
+  var P = { red:'#FF525C', orange:'#FF9429', yellow:'#FFB32E', green:'#9EE04D',
+            teal:'#4DD9C7', blue:'#4D8FFF', purple:'#AD66FF', pink:'#FF61A8' };
+
+  var INITIAL = [
+    [7,0,'blue'],[7,1,'blue'],[7,2,'blue'],[7,5,'orange'],[7,6,'orange'],[7,7,'orange'],
+    [6,0,'yellow'],[6,1,'yellow'],[6,5,'purple'],[6,6,'purple'],[6,7,'purple'],
+    [5,0,'green'],[5,1,'green'],[5,6,'pink'],[5,7,'pink'],
+    [4,7,'pink'],
+    [2,2,'teal'],[2,3,'teal'],[3,2,'teal'],[3,3,'teal']
+  ];
+  /* tray pieces: cells are [row,col] offsets inside the piece's own box */
+  var PIECES = [
+    { color:'red',   w:2, h:1, cells:[[0,0],[0,1]],             target:[7,3] },
+    { color:'teal',  w:2, h:2, cells:[[0,0],[0,1],[1,0],[1,1]], target:[3,5] },
+    { color:'green', w:3, h:1, cells:[[0,0],[0,1],[0,2]],       target:[6,2] }
+  ];
+  var CLEARS = [
+    { afterPiece:0, row:7, impact:[7,4], points:120,  mult:null },
+    { afterPiece:2, row:6, impact:[6,3], points:480,  mult:'×2' }
+  ];
+  var BASE_SCORE = 12480;
+
+  var demo = document.getElementById('dGrid');
+  var trayEl = document.getElementById('dTray');
+  var scoreEl = document.getElementById('dScore');
+  var multEl = document.getElementById('dMult');
+  var flashEl = document.getElementById('dFlash');
+  var demoBox = document.getElementById('demo');
+  var cells = [];
+
+  function cellAt(r,c){ return cells[r*8+c]; }
+  function fmt(n){ return n.toLocaleString('en-US'); }
+
+  for (var i=0;i<64;i++){ var d=document.createElement('div'); d.className='cell'; demo.appendChild(d); cells.push(d); }
+
+  function paintInitial(){
+    cells.forEach(function(c){ c.className='cell'; c.style.removeProperty('--c'); });
+    INITIAL.forEach(function(e){ var c=cellAt(e[0],e[1]); c.classList.add('f'); c.style.setProperty('--c', P[e[2]]); });
+  }
+  function buildTray(){
+    trayEl.innerHTML='';
+    PIECES.forEach(function(p){
+      var s=document.createElement('div'); s.className='slot';
+      s.style.gridTemplateColumns='repeat('+p.w+',13px)';
+      for (var r=0;r<p.h;r++) for (var c=0;c<p.w;c++){
+        var used = p.cells.some(function(pc){ return pc[0]===r && pc[1]===c; });
+        var m=document.createElement('i'); if(used){ m.style.setProperty('--c',P[p.color]); } else { m.className='e'; }
+        s.appendChild(m);
+      }
+      trayEl.appendChild(s);
+    });
+  }
+
+  var score = BASE_SCORE, scoreAnim = null;
+  function setScore(n, animate){
+    if (scoreAnim) cancelAnimationFrame(scoreAnim);
+    if (!animate || document.hidden){ score=n; scoreEl.textContent=fmt(n); return; }
+    var from=score, t0=null;
+    function tick(ts){
+      if(!t0) t0=ts;
+      var k=Math.min(1,(ts-t0)/450); k=1-Math.pow(1-k,3);
+      scoreEl.textContent = fmt(Math.round(from+(n-from)*k));
+      if(k<1) scoreAnim=requestAnimationFrame(tick); else { score=n; scoreAnim=null; }
+    }
+    scoreAnim=requestAnimationFrame(tick);
+  }
+
+  var timeouts=[], running=false, inView=false;
+  function later(fn,ms){ timeouts.push(setTimeout(fn,ms)); }
+  function clearTimers(){ timeouts.forEach(clearTimeout); timeouts=[]; }
+
+  function flyPiece(idx, done){
+    var p=PIECES[idx], slot=trayEl.children[idx];
+    var first=cellAt(p.target[0],p.target[1]);
+    var boxR=demoBox.getBoundingClientRect(), cellR=first.getBoundingClientRect(), slotR=slot.getBoundingClientRect();
+    var size=cellR.width;
+    var fly=document.createElement('div'); fly.className='fly';
+    fly.style.gridTemplateColumns='repeat('+p.w+',' + size + 'px)';
+    for (var r=0;r<p.h;r++) for (var c=0;c<p.w;c++){
+      var used=p.cells.some(function(pc){ return pc[0]===r && pc[1]===c; });
+      var m=document.createElement('i');
+      m.style.width=size+'px'; m.style.height=size+'px';
+      if(used){ m.style.setProperty('--c',P[p.color]); } else { m.style.background='transparent'; m.style.boxShadow='none'; }
+      fly.appendChild(m);
+    }
+    var pieceW = p.w*size + (p.w-1)*3, trayScale = 16/size;
+    var startX = slotR.left - boxR.left + slotR.width/2 - pieceW/2;
+    var startY = slotR.top - boxR.top + slotR.height/2 - (p.h*size + (p.h-1)*3)/2;
+    fly.style.left='0px'; fly.style.top='0px';
+    fly.style.transform='translate('+startX+'px,'+startY+'px) scale('+trayScale+')';
+    fly.style.transformOrigin='center';
+    demoBox.appendChild(fly);
+    slot.classList.add('used');
+    var endX = cellR.left - boxR.left, endY = cellR.top - boxR.top;
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      fly.style.transform='translate('+endX+'px,'+endY+'px) scale(1)';
+    }); });
+    later(function(){
+      p.cells.forEach(function(pc){
+        var c=cellAt(p.target[0]+pc[0], p.target[1]+pc[1]);
+        c.classList.add('f','pop'); c.style.setProperty('--c',P[p.color]);
+        later(function(){ c.classList.remove('pop'); },300);
+      });
+      fly.remove();
+      if(done) done();
+    }, 540);
+  }
+
+  function clearRow(clr){
+    var r=clr.row, impact=clr.impact;
+    /* radial ring from the impact cell */
+    var boxR=demo.getBoundingClientRect(), impR=cellAt(impact[0],impact[1]).getBoundingClientRect();
+    var ring=document.createElement('div'); ring.className='ring';
+    ring.style.left=(impR.left-boxR.left+impR.width/2)+'px';
+    ring.style.top=(impR.top-boxR.top+impR.height/2)+'px';
+    demo.parentNode.appendChild(ring);
+    requestAnimationFrame(function(){ ring.classList.add('on'); });
+    later(function(){ ring.remove(); },700);
+    flashEl.classList.remove('on'); void flashEl.offsetWidth; flashEl.classList.add('on');
+    /* collapse cells staggered by distance from impact */
+    for (var c=0;c<8;c++){
+      (function(c){
+        var dist=Math.abs(c-impact[1]);
+        later(function(){ cellAt(r,c).classList.add('clr'); }, dist*45);
+        later(function(){
+          var cel=cellAt(r,c); cel.className='cell'; cel.style.removeProperty('--c');
+          requestAnimationFrame(function(){ cel.classList.remove('clr'); });
+        }, 420+dist*45);
+      })(c);
+    }
+    /* score floater */
+    var fl=document.createElement('div'); fl.className='floater'; fl.textContent='+'+clr.points;
+    var rowR=cellAt(r,4).getBoundingClientRect();
+    fl.style.left=(rowR.left-boxR.left)+'px'; fl.style.top=(rowR.top-boxR.top-8)+'px';
+    demo.parentNode.appendChild(fl);
+    requestAnimationFrame(function(){ fl.classList.add('on'); });
+    later(function(){ fl.remove(); },1100);
+    setScore(score+clr.points, true);
+    if (clr.mult){ multEl.textContent=clr.mult; multEl.classList.add('on'); }
+  }
+
+  function resetBoard(soft){
+    demo.style.transition='opacity .3s'; trayEl.style.transition='opacity .3s';
+    if(soft){ demo.style.opacity='0.25'; trayEl.style.opacity='0.25'; }
+    later(function(){
+      paintInitial(); buildTray(); multEl.classList.remove('on'); setScore(BASE_SCORE,false);
+      demo.style.opacity='1'; trayEl.style.opacity='1';
+    }, soft?320:0);
+  }
+
+  function runLoop(){
+    if(!running) return;
+    later(function(){ flyPiece(0, function(){ later(function(){ clearRow(CLEARS[0]); },220); }); }, 700);
+    later(function(){ flyPiece(1, null); }, 2900);
+    later(function(){ flyPiece(2, function(){ later(function(){ clearRow(CLEARS[1]); },220); }); }, 4500);
+    later(function(){ resetBoard(true); }, 7600);
+    later(runLoop, 8400);
+  }
+  function start(){ if(running||RM) return; running=true; clearTimers(); resetBoard(false); runLoop(); }
+  function stop(){ running=false; clearTimers(); }
+  window.__gb={start:start, stop:stop};
+
+  paintInitial(); buildTray();
+  if (!RM){
+    var vio=new IntersectionObserver(function(es){
+      inView = es[0].isIntersecting;
+      if (inView && !document.hidden) start(); else stop();
+    },{threshold:.25});
+    vio.observe(demoBox);
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden) stop(); else if (inView) start();
+    });
+  }
+
+  /* ================= leaderboard =================
+     Illustrative, restrained. DATA must remain a trusted hard-coded literal:
+     values are interpolated into innerHTML below. */
+  var DATA={
+    blitz:[['Aria_K',12840,'#e8743a'],['mxnt',10570,'#46c8a0'],['viktor.s',9120,'#6e78e0'],['You',7460,'#9a5d00','me'],['lina_pkr',6380,'#f2b33a'],['dropz',5210,'#a8c83c'],['nova__',4490,'#ec6a35']],
+    orig:[['quill',24180,'#6e78e0'],['Aria_K',21050,'#e8743a'],['m_berg',18320,'#46c8a0'],['You',15735,'#9a5d00','me'],['sora.q',13640,'#f2b33a'],['petter',11270,'#a8c83c'],['kdireo',9810,'#ec6a35']]
+  };
+  var lbcard=document.getElementById('lbcard');
+  function renderLb(key){
+    lbcard.innerHTML='';
+    DATA[key].forEach(function(r,i){
+      var row=document.createElement('div'); row.className='lbrow'+(r[3]==='me'?' me':'');
+      var ini=r[0]==='You'?'★':r[0][0].toUpperCase();
+      row.innerHTML='<span class="lbrank r'+(i+1)+'">'+(i+1)+'</span>'+
+        '<span class="av" style="background:'+r[2]+'">'+ini+'</span>'+
+        '<span class="lbname">'+r[0]+'</span>'+
+        '<span class="lbscore">'+r[1].toLocaleString('en-US')+'</span>';
+      lbcard.appendChild(row);
+      if(RM){ row.classList.add('in'); } else { setTimeout(function(){ row.classList.add('in'); }, Math.min(i,6)*55); }
+    });
+  }
+  var tabs=[].slice.call(document.querySelectorAll('.lbtab'));
+  tabs.forEach(function(t){ t.addEventListener('click',function(){
+    tabs.forEach(function(x){ x.classList.remove('on'); x.setAttribute('aria-pressed','false'); });
+    t.classList.add('on'); t.setAttribute('aria-pressed','true'); renderLb(t.getAttribute('data-lb')); }); });
+  function activeLb(){ var on=document.querySelector('.lbtab.on'); return on?on.getAttribute('data-lb'):'blitz'; }
+  new IntersectionObserver(function(e,obs){ if(e[0].isIntersecting){ renderLb(activeLb()); obs.disconnect(); }},{threshold:.12, rootMargin:'0px 0px -10% 0px'}).observe(lbcard);
+
+  /* ================= skins — accurate catalog (11 block skins) ================= */
+  var SUNSET='linear-gradient(180deg,#57244D 0%,#993357 18%,#E66652 38%,#FF8C47 58%,#FFB84D 80%,#FFE094 100%)';
+  var WHEEL='conic-gradient(from 40deg,#F27979,#F2C079,#E8F279,#8CF279,#79F2C9,#79C3F2,#9C79F2,#F279D6,#F27979)';
+  var GRID=[
+    {n:'Prism',          c:['#FF525C','#FFB32E','#9EE04D','#4D8FFF'], u:'Included', k:0},
+    {n:'Opal Drift',     c:['#F4C9DC','#D8F0CF','#BFE6F2','#CDB8E6'], u:'2 rewarded ads', k:0},
+    {n:'Abyss Light',    c:['#082B11','#2B2607','#092F1C','#2F2F07'], u:'3 rewarded ads', k:0, glow:['rgba(80,230,130,.65)','rgba(220,220,60,.55)','rgba(80,230,130,.65)','rgba(220,220,60,.55)']},
+    {n:'Custom Breen',   c:['#47D17A','#47D1B0','#47B8D1','#4796D1'], u:'5 rewarded ads — you tune it', k:0},
+    {n:'Amber Resin',    c:['#C25A28','#E08A22','#F0B43C','#6E5828'], u:'Score 2,500', k:1},
+    {n:'Coral Reef',     c:['#FF6F5E','#FFB983','#6FD0AE','#4FC2C9'], u:'Score 10,000', k:1},
+    {n:'Glacier Halo',   c:['#EAF6FB','#BFE4F0','#9AD0E6','#6FB6D2'], u:'Score 30,000', k:1},
+    {n:'Sunset',         g:SUNSET,                                    u:'Score 100,000', k:1},
+    {n:'Purple Emerald', c:['#6BCC99','#B3E680','#9E85EB','#CCA8F5'], u:'Score 1,000,000', k:1},
+    {n:'Soda',           c:['#FF5757','#FFC75C','#E6FA8A','#FFA39E'], u:'Gridblitz Pro', pro:1},
+    {n:'Customizer',     g:WHEEL,                                     u:'Gridblitz Pro — your colours, your finish', pro:1}
+  ];
+  var sg=document.getElementById('skinGrid');
+  var skObs=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); skObs.unobserve(en.target);} }); },{threshold:.15});
+  GRID.forEach(function(s,i){
+    var d=document.createElement('div'); d.className='sk'; if(!RM) d.style.transitionDelay=(i*40)+'ms';
+    var sw;
+    if (s.g){ sw='<div class="skswatch"><i style="background:'+s.g+'"></i></div>'; }
+    else {
+      sw='<div class="skswatch">'+s.c.map(function(x,j){
+        var glow = s.glow ? ('box-shadow:0 0 9px 1px '+s.glow[j]+', inset 0 0 0 1px rgba(255,255,255,.06);') : '';
+        return '<i style="background:'+x+';'+glow+'"></i>';
+      }).join('')+'</div>';
+    }
+    d.innerHTML=(s.pro?'<span class="protag">PRO</span>':'')+sw+'<h4>'+s.n+'</h4><div class="u'+(s.k?' skill':(s.pro?' pro':''))+'">'+s.u+'</div>';
+    sg.appendChild(d); skObs.observe(d);
+  });
+
+  /* ================= boards — accurate catalog (8) ================= */
+  var NEON='repeating-linear-gradient(0deg, rgba(235,245,255,.75) 0 1px, transparent 1px 12px), repeating-linear-gradient(90deg, rgba(235,245,255,.75) 0 1px, transparent 1px 12px), #050508';
+  var BOARDS=[
+    {n:'Midnight', bg:'radial-gradient(90% 120% at 25% 0%, rgba(96,84,182,.40), transparent 60%), #14161C', u:'Included', k:0},
+    {n:'Tidepool', bg:'radial-gradient(90% 120% at 70% 0%, rgba(77,179,255,.35), transparent 60%), #0D2E54', u:'1 rewarded ad', k:0},
+    {n:'Canopy',   bg:'radial-gradient(90% 120% at 30% 0%, rgba(87,214,127,.30), transparent 60%), #0F3324', u:'Score 5,000', k:1},
+    {n:'Ember',    bg:'radial-gradient(90% 120% at 70% 100%, rgba(255,128,51,.40), transparent 60%), #3D1A12', u:'3 rewarded ads', k:0},
+    {n:'Graphite', bg:'radial-gradient(90% 120% at 50% 0%, rgba(184,194,214,.22), transparent 60%), #24242E', u:'Score 20,000', k:1},
+    {n:'Aurora',   bg:'radial-gradient(70% 110% at 22% 0%, rgba(66,230,158,.38), transparent 55%), radial-gradient(70% 110% at 80% 20%, rgba(204,102,242,.30), transparent 55%), #0A1A29', u:'Score 50,000', k:1},
+    {n:'Neon Grid', bg:NEON, u:'Gridblitz Pro', pro:1},
+    {n:'Customizer Board', bg:'radial-gradient(at 0% 0%, rgba(242,121,121,.75), transparent 58%), radial-gradient(at 100% 0%, rgba(121,182,242,.75), transparent 58%), radial-gradient(at 0% 100%, rgba(121,242,166,.75), transparent 58%), radial-gradient(at 100% 100%, rgba(214,121,242,.75), transparent 58%), #0A0A0F', u:'Gridblitz Pro — pick the four corners', pro:1}
+  ];
+  var bg=document.getElementById('boardGrid');
+  BOARDS.forEach(function(b,i){
+    var d=document.createElement('div'); d.className='bd'; if(!RM) d.style.transitionDelay=(i*40)+'ms';
+    d.innerHTML=(b.pro?'<span class="protag">PRO</span>':'')+'<div class="bdsw" style="background:'+b.bg+'"></div><h4>'+b.n+'</h4><div class="u'+(b.k?' skill':(b.pro?' pro':''))+'">'+b.u+'</div>';
+    bg.appendChild(d); skObs.observe(d);
+  });
+
+  /* ================= reveal + nav ================= */
+  var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} }); },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(function(n){ io.observe(n); });
+
+  var navEl=document.querySelector('nav');
+  function onScroll(){ navEl.classList.toggle('scrolled', window.scrollY>8); }
+  var ticking=false;
+  function sched(){ if(ticking)return; ticking=true; requestAnimationFrame(function(){ onScroll(); ticking=false; }); }
+  window.addEventListener('scroll',sched,{passive:true});
+  window.addEventListener('resize',sched,{passive:true});
+  onScroll();
+
+  var navlinks=[].slice.call(document.querySelectorAll('.navlinks a.lk'));
+  var spy=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){
+      navlinks.forEach(function(a){ a.classList.toggle('act', a.getAttribute('href')==='#'+en.target.id); }); } }); },{rootMargin:'-45% 0px -50% 0px'});
+  ['how','modes','skins','pro'].forEach(function(id){ var el=document.getElementById(id); if(el) spy.observe(el); });
+})();
+</script>
 </body>
 </html>
