@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gridblitz — Privacy Policy</title>
-<meta name="description" content="The privacy policy for Gridblitz, the 8×8 block puzzle for iPhone. The app uses anonymous GameAnalytics events and an optional Google AdMob rewarded ad.">
+<meta name="description" content="The privacy policy for Gridblitz, the 8×8 block puzzle for iPhone. The app offers optional GameAnalytics sharing and Google AdMob rewarded ads.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0f14'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-16h-8z' fill='%23f2a516'/%3E%3C/svg%3E">
 <style>
@@ -74,20 +74,27 @@
   <header class="page">
     <p class="eyebrow">Legal</p>
     <h1>Privacy Policy</h1>
-    <p class="muted">Last updated: June 26, 2026</p>
+    <p class="muted">Last updated: September 10, 2026</p>
+    <p class="muted"><strong>Version note:</strong> The separate analytics-sharing control and expanded Pro benefits described below apply to version 1.2.3. Earlier versions do not include that separate analytics control; their analytics may also use persistent device identifiers. Version 1.2.3 is being prepared for App Store release.</p>
     <p class="intro">Gridblitz (&ldquo;the app&rdquo;, &ldquo;we&rdquo;) is a block-placement puzzle
-    game for iOS. This policy explains what information the app and the services it uses handle. We
-    keep it short because the app collects very little.</p>
-    <div class="tldr"><strong>In short:</strong> the game has no accounts and collects nothing that
-    identifies you. It uses GameAnalytics to collect anonymous gameplay and diagnostic data to improve
-    the game, and offers an <em>optional</em> rewarded ad (Google AdMob) you can choose to watch.</div>
+    game for iOS. This policy explains what information the app and the services it uses handle.
+    You can play without an account, analytics sharing, or watching ads.</p>
+    <div class="tldr"><strong>Your choices:</strong> gameplay analytics sharing is off until you
+    enable it in Settings. Optional rewarded ads provide one revive per run and selected cosmetic
+    unlocks. These services can process device identifiers; having no account does not make their
+    data anonymous.</div>
   </header>
 
   <main>
-    <h2>Information the app collects itself</h2>
-    <p><strong>None that identifies you.</strong> The app has no account, login, or sign-up. Your game
-    progress, best scores, and unlocked skins are stored <strong>only on your device</strong> (in
-    standard iOS storage). We do not transmit that data to us or anyone else, and we cannot see it.</p>
+    <h2>Game progress and purchases</h2>
+    <p>The app has no account, login, or sign-up. Your saved board, best scores, settings and unlocked
+    skins are stored on your device. High scores may also be sent to Game Center, and gameplay scores
+    and unlock events may be sent to GameAnalytics when you choose to share analytics.</p>
+    <p>Gridblitz Pro is an optional purchase processed by Apple through StoreKit. The app checks your
+    purchase entitlement to unlock every block and board skin and provide one ad-free revive per
+    run. Pro owners do not need to watch ads for skins. We do not receive your payment-card details. If
+    analytics sharing is enabled, the app sends a purchase-completed event to GameAnalytics; it does
+    not send a receipt, transaction identifier or payment details to that service.</p>
 
     <h2>Game Center (leaderboards)</h2>
     <p>If you are signed in to Apple's Game Center, your high scores are submitted to the Gridblitz
@@ -97,9 +104,9 @@
     name, or email.</p>
 
     <h2>Advertising (Google AdMob)</h2>
-    <p>The app offers a single <em>optional</em> rewarded ad &mdash; you may choose to watch it to
-    continue (&ldquo;revive&rdquo;) after a game ends. The game is fully playable without ever
-    watching an ad. These ads are provided by Google AdMob. To serve and measure ads, Google may
+    <p>Optional rewarded ads are available for one revive per run and selected cosmetic unlocks.
+    The game is fully playable without ever watching an ad. These ads are provided by Google AdMob.
+    To serve and measure ads, Google may
     collect and process information such as your device's advertising identifier (IDFA),
     approximate/general location derived from IP, and ad-interaction data. With your permission, this
     may be used for personalized advertising.</p>
@@ -109,34 +116,45 @@
     <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.</p>
 
     <h2>Analytics &amp; diagnostics (GameAnalytics)</h2>
-    <p>To understand how the game is played and to fix problems, the app uses
-    <a href="https://gameanalytics.com/privacy">GameAnalytics</a>. It collects anonymous gameplay and
-    usage data (for example which modes are played and how scores progress), basic device information
-    (such as device model and iOS version), and crash and performance data. This data is not linked to
-    your identity and is used only to improve Gridblitz.</p>
+    <p><strong>Sharing is off by default.</strong> You can enable &ldquo;Share gameplay analytics&rdquo;
+    in the app's Settings to help us understand play and purchases. If enabled, the app sends mode
+    choices, scores, revive and cosmetic events, paywall views and purchase outcomes to
+    <a href="https://gameanalytics.com/privacy">GameAnalytics</a>. Its SDK also processes session,
+    device and diagnostic information. Events are linked to a persistent device identifier (IDFV,
+    used as the SDK's user identifier), and may include the advertising identifier (IDFA) when iOS
+    tracking permission allows it. This is pseudonymous data, not anonymous data.</p>
+    <p>Turning sharing off stops new analytics event submission and local event caching, including
+    SDK session and diagnostic events. Requests already in flight may finish, and SDK configuration
+    requests may continue until the app is restarted. On the next launch, GameAnalytics is not
+    initialized while sharing remains off. Turning sharing off does not delete previously received
+    data; contact us for a data request.</p>
 
-    <h2>App Tracking Transparency</h2>
-    <p>Before any ad-related tracking, iOS asks for your permission via the standard
-    &ldquo;Allow Tracking?&rdquo; prompt. If you decline, you can still play the game and earn
-    revives; ads simply won't be personalized. You can change this anytime in
-    <code>Settings &rarr; Privacy &amp; Security &rarr; Tracking</code>, and reset your advertising
-    identifier in <code>Settings &rarr; Privacy &amp; Security &rarr; Tracking / Apple
-    Advertising</code>.</p>
+    <h2>Advertising and tracking choices</h2>
+    <p>Google's consent flow runs before the ad SDK starts. Where required, it asks for your ad privacy
+    choices; you can revisit these through &ldquo;Ad privacy options&rdquo; in the app's Settings.
+    Analytics sharing is a separate choice and is not enabled by agreeing to ads.</p>
+    <p>iOS also asks for App Tracking Transparency permission before the advertising identifier is
+    used. Declining tracking does not limit gameplay. Optional ad rewards remain available when
+    Google can serve an eligible ad; availability can depend on consent choices and network fill.
+    You can change tracking permission in <code>Settings &rarr; Privacy &amp; Security &rarr; Tracking</code>.</p>
 
     <h2>Children</h2>
     <p>Gridblitz is not directed to children under 13 and does not knowingly collect personal
     information from children. The data processing is the analytics and optional advertising described above.</p>
 
     <h2>Data we share or sell</h2>
-    <p>We do not sell your personal data. The only third parties involved are Apple (Game Center),
+    <p>We do not sell your personal data. The services described here are Apple (Game Center and purchases),
     GameAnalytics (analytics &amp; diagnostics) and Google (AdMob), as described above, for the sole
-    purposes of running leaderboards, improving the game, and serving the optional ad.</p>
+    purposes of running leaderboards, improving the game, and serving the optional ads.</p>
 
     <h2>Your choices</h2>
     <ul>
       <li>Decline tracking at the prompt, or turn it off in iOS Settings.</li>
-      <li>Reset or limit your advertising identifier in iOS Settings.</li>
-      <li>Delete the app to remove all locally stored game data.</li>
+      <li>Turn gameplay analytics sharing on or off in the app's Settings. Restart after turning it
+      off to fully stop the analytics SDK.</li>
+      <li>Review ad consent through Ad privacy options in the app's Settings when available.</li>
+      <li>Delete the app to remove its locally stored game data. This does not delete data already
+      received by Apple, Google or GameAnalytics.</li>
     </ul>
 
     <h2>Changes</h2>
