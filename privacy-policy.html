@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gridblitz — Privacy Policy</title>
-<meta name="description" content="The privacy policy for Gridblitz, the 8×8 block puzzle for iPhone. The app uses optional GameAnalytics sharing and Google AdMob banner, interstitial and rewarded ads.">
+<meta name="description" content="The privacy policy for Gridblitz, the 8×8 block puzzle for iPhone. Version 2.0 uses device-bound guest leaderboards and Google advertising; this policy also explains earlier versions.">
 <meta name="theme-color" content="#ffffff">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0f14'/%3E%3Cpath d='M18 4 8 18h7l-2 10 11-16h-8z' fill='%23f2a516'/%3E%3C/svg%3E">
 <style>
@@ -16,6 +16,7 @@
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth; -webkit-text-size-adjust:100%; color-scheme:light}
+  [id]{scroll-margin-top:72px}
   body{margin:0; background:var(--bg); color:var(--ink); overflow-x:hidden; line-height:1.65;
     font-family:-apple-system,"SF Pro Display","SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;
     -webkit-font-smoothing:antialiased; letter-spacing:-0.01em;}
@@ -74,41 +75,30 @@
   <header class="page">
     <p class="eyebrow">Legal</p>
     <h1>Privacy Policy</h1>
-    <p class="muted">Last updated: September 22, 2026</p>
-    <p class="muted"><strong>Earlier versions:</strong> The separate analytics-sharing control and
-    all-skin Pro benefits are available in version 1.2.3 and later. Earlier versions do not include
-    that separate analytics control; their analytics may also use persistent device identifiers.</p>
-    <p class="intro">Gridblitz (&ldquo;the app&rdquo;, &ldquo;we&rdquo;) is a block-placement puzzle
-    game for iOS. This policy explains what information the app and the services it uses handle.
-    You can play without an account or analytics sharing. This policy also covers the
-    banner and interstitial advertising introduced in version 1.3.0.</p>
-    <div class="tldr"><strong>Your choices:</strong> gameplay analytics sharing is off until you
-    enable it in Settings. Free play in version 1.3.0 includes home-screen banner ads and occasional
-    ads between completed rounds; rewarded ads for revives and selected skins remain optional.
-    Gridblitz Pro removes all ads. These services can process device identifiers; having no account
-    does not make their data anonymous.</div>
+    <p class="muted">Last updated: October 4, 2026</p>
+    <p class="muted"><strong>Versions:</strong> this policy covers Gridblitz 2.0.0 and earlier versions still in use. Earlier versions used Game Center and optional GameAnalytics. Version 2.0.0 uses its own guest leaderboards and does not include GameAnalytics.</p>
+    <p class="intro">Gridblitz is a block-placement puzzle for iPhone. This policy explains the information handled by the app and its services. Gameplay works offline without a login or email address.</p>
+    <div class="tldr"><strong>Your choices:</strong> in version 2.0.0, Leaderboards are on by default and create a guest account after your first finished round. Names and scores are public. Turn Leaderboards off in Settings &gt; Privacy to delete that account and its scores; local progress stays. Reward ads are optional, and Pro removes all ads. Earlier versions have a separate optional analytics-sharing control.</div>
   </header>
 
   <main>
     <h2>Game progress and purchases</h2>
-    <p>The app has no account, login, or sign-up. Your saved board, best scores, settings and unlocked
-    skins are stored on your device. High scores may also be sent to Game Center, and gameplay scores
-    and unlock events may be sent to GameAnalytics when you choose to share analytics.</p>
-    <p>Gridblitz Pro is an optional purchase processed by Apple through StoreKit. The app checks your
-    purchase entitlement to remove all ads, unlock every block and board skin and provide one
-    ad-free revive per run. We do not receive your payment-card details. If
-    analytics sharing is enabled, the app sends a purchase-completed event to GameAnalytics; it does
-    not send a receipt, transaction identifier or payment details to that service.</p>
+    <p>Your saved round, best scores, settings and owned skins are stored on your device. Purchases and Restore Purchases use Apple&#x27;s StoreKit. Pro removes ads, unlocks every block and board skin, and provides one ad-free revive per round. In version 2.0.0 the Customizer is included. We do not receive your payment-card details.</p>
+    <p>Version 2.0.0 needs no login or email address. Its online leaderboards create a device-bound guest account after the first finished round unless you turn Leaderboards off in Settings &gt; Privacy.</p>
 
-    <h2>Game Center (leaderboards)</h2>
-    <p>If you are signed in to Apple's Game Center, your high scores are submitted to the Gridblitz
-    leaderboards so you can compare with others. Game Center is an Apple service governed by
-    <a href="https://www.apple.com/legal/privacy/">Apple's Privacy Policy</a>. We only send a score
-    value and the associated Game Center identifier Apple provides; we do not receive your Apple ID,
-    name, or email.</p>
+    <h2>Earlier versions: Game Center</h2>
+    <p>Earlier versions used Apple&#x27;s Game Center for online scores when the player was signed in. Game Center is an Apple service; scores and the associated Game Center identifier were sent to it. Version 2.0.0 does not use Game Center. Apple&#x27;s handling is described in <a href="https://www.apple.com/legal/privacy/">Apple&#x27;s Privacy Policy</a>.</p>
+
+    <h2 id="leaderboards">Online leaderboards (version 2.0.0)</h2>
+    <p>Gridblitz 2.0.0 has online leaderboards for Original and Blitz, all-time and weekly. Leaderboards are on by default. When you finish your first round, the app creates a guest account for this installation with a random identifier and a generated player name. You can change the name in the app. Your player name and best scores are public; do not put personal information in your player name. No email, password or sign-in is required.</p>
+    <p>We store the random account identifier, a hash of its secret key, your player name, best scores by mode and period, timestamps, and the identifiers and fingerprints of submitted rounds. The secret itself stays in your iPhone&#x27;s Keychain. The app sends placement history to check a score; move histories are processed and not stored in the database.</p>
+    <p>Accounts and all-time scores stay until you delete the account. Daily cleanup removes round receipts after 90 days and old weekly score rows after the eight-week retention window. For abuse prevention, the database keeps salted daily IP digests and request counters; daily cleanup removes entries older than two days, normally within three days. Raw IP addresses are not stored in that database. The hosting provider still processes network metadata to deliver the service.</p>
+    <p>The service runs on Cloudflare Workers with an EU-jurisdiction D1 database. This describes the database jurisdiction; it does not mean all Cloudflare network processing happens only in the EU. Worker error logging records a route and error event, not account secrets or request bodies. Operational request logs are sampled.</p>
+    <p>Turn Leaderboards off in Settings &gt; Privacy &gt; Leaderboards, or choose Delete leaderboard account on the Leaderboards screen, to delete the account, scores and round receipts from the server. Local scores, skins and game progress stay on your phone. Deletion needs a network connection; if it fails, the app reports the failure so you can retry. Rounds finished while Leaderboards is off remain local.</p>
+    <p>Hide player stores a list on this device so the hidden player&#x27;s rows do not appear here. It is not sent to the leaderboard service. Report name copies the player&#x27;s name, board, date and public player identifier to your clipboard and opens support. It does not automatically send a report. If you choose to contact support, you send that report and any contact information you include through the contact method on the support page.</p>
 
     <h2>Advertising (Google AdMob)</h2>
-    <p>Google AdMob provides the app's ads. In version 1.3.0, free users may see a banner on the home
+    <p>Google AdMob provides the app's ads. In version 1.3.0 and later, free users may see a banner on the home
     screen and occasional full-screen ads between completed rounds. Ads do not interrupt active
     gameplay. Players can also choose rewarded ads for one revive per run and selected cosmetic
     unlocks. Earlier versions only offer the optional rewarded formats. Gridblitz Pro removes all
@@ -123,7 +113,9 @@
     apps that use its services</a> and
     <a href="https://policies.google.com/privacy">Google's Privacy Policy</a>.</p>
 
-    <h2>Analytics &amp; diagnostics (GameAnalytics)</h2>
+    <h2>Analytics &amp; diagnostics</h2>
+    <p>Version 2.0.0 does not include GameAnalytics or send gameplay or purchase events to it. Google's advertising and consent SDKs may still process their own diagnostic, interaction and advertising data as described above.</p>
+    <p><strong>Earlier versions:</strong> the following GameAnalytics explanation applies to versions before 2.0.0. The separate analytics-sharing control is available from version 1.2.3; older versions lack that separate control.</p>
     <p><strong>Sharing is off by default.</strong> You can enable &ldquo;Share gameplay analytics&rdquo;
     in the app's Settings to help us understand play and purchases. If enabled, the app sends mode
     choices, scores, revive and cosmetic events, paywall views and purchase outcomes to
@@ -140,7 +132,7 @@
     <h2>Advertising and tracking choices</h2>
     <p>Google's consent flow runs before the ad SDK starts. Where required, it asks for your ad privacy
     choices; you can revisit these through &ldquo;Ad privacy options&rdquo; in the app's Settings.
-    Analytics sharing is a separate choice and is not enabled by agreeing to ads.</p>
+    In earlier versions, analytics sharing is a separate choice and is not enabled by agreeing to ads.</p>
     <p>iOS also asks for App Tracking Transparency permission before the advertising identifier is
     used. Declining tracking does not limit gameplay. Optional ad rewards remain available when
     Google can serve an eligible ad; availability can depend on consent choices and network fill.
@@ -148,21 +140,22 @@
 
     <h2>Children</h2>
     <p>Gridblitz is not directed to children under 13 and does not knowingly collect personal
-    information from children. The data processing is the analytics and advertising described above.</p>
+    information from children. This policy covers leaderboards, support correspondence, advertising and analytics in earlier versions.</p>
 
-    <h2>Data we share or sell</h2>
-    <p>We do not sell your personal data. The services described here are Apple (Game Center and purchases),
-    GameAnalytics (analytics &amp; diagnostics) and Google (AdMob), as described above, for the sole
-    purposes of running leaderboards, improving the game, and serving and measuring ads.</p>
+    <h2 id="support-messages">Support messages and name reports</h2>
+    <p>If you contact support, we use your message and the contact information you provide to answer your request or handle your name report. We keep the correspondence while the issue is open and delete it from our active support mailbox within 90 days after it is resolved. If specific information must be retained to handle an ongoing abuse investigation or a legal obligation, we keep only what is necessary for that purpose and remove it when it is no longer needed. You can request deletion through the contact details on our support page. We respond without undue delay, normally within one month.</p>
+
+    <h2>Services and sharing</h2>
+    <p>We do not sell your personal data. In version 2.0.0, Apple provides purchases, Google provides advertising and consent, and Cloudflare hosts the online leaderboards. Earlier versions also used Game Center and optional GameAnalytics. These services handle data for the purposes described above. If you contact support, your chosen email provider and our support-mail service also handle your correspondence.</p>
 
     <h2>Your choices</h2>
     <ul>
-      <li>Decline tracking at the prompt, or turn it off in iOS Settings.</li>
-      <li>Turn gameplay analytics sharing on or off in the app's Settings. Restart after turning it
-      off to fully stop the analytics SDK.</li>
-      <li>Review ad consent through Ad privacy options in the app's Settings when available.</li>
-      <li>Delete the app to remove its locally stored game data. This does not delete data already
-      received by Apple, Google or GameAnalytics.</li>
+      <li>In version 2.0.0, turn Leaderboards off in Settings &gt; Privacy, or use Delete leaderboard account, to delete the guest account and its scores. A network connection is required.</li>
+      <li>Request deletion of support correspondence through the published contact details below.</li>
+      <li>Decline tracking at the prompt, or change it in iOS Settings.</li>
+      <li>Review Ad privacy options in the app's Settings when available.</li>
+      <li>In earlier versions, change gameplay analytics sharing in Settings. Restart after turning it off to fully stop the GameAnalytics SDK; this does not delete previously received data.</li>
+      <li>Deleting the app removes local game data. It does not delete data held by Apple, Google, Cloudflare or GameAnalytics. Use the account-deletion controls or contact us for a data request.</li>
     </ul>
 
     <h2>Changes</h2>

@@ -17,6 +17,7 @@
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth; -webkit-text-size-adjust:100%; color-scheme:light}
+  [id]{scroll-margin-top:72px}
   body{margin:0; background:var(--bg); color:var(--ink); overflow-x:hidden; line-height:1.6;
     font-family:-apple-system,"SF Pro Display","SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;
     -webkit-font-smoothing:antialiased; letter-spacing:-0.01em;}
@@ -86,7 +87,7 @@
     <p class="eyebrow">Support</p>
     <h1>How can we help?</h1>
     <p class="lede">Answers to the most common questions about Gridblitz. If you don't find what
-    you need, we're one email away.</p>
+    you need, we're one email away. The leaderboard answers below cover version 2.0.0; earlier versions use Game Center.</p>
   </header>
 
   <section>
@@ -113,7 +114,7 @@
       </div>
       <div class="qa">
         <h3>Do I have to watch ads?</h3>
-        <p>In version 1.3.0, free play includes a banner on the home screen and occasional full-screen
+        <p>In version 1.3.0 and later, free play includes a banner on the home screen and occasional full-screen
         ads between completed rounds. Longer runs count toward the next ad, but ads never interrupt
         a run. Rewarded ads for one revive per run and selected skins remain optional. Earlier
         versions offer only optional rewarded ads. Gridblitz Pro removes all ads and includes every
@@ -130,23 +131,36 @@
       </div>
       <div class="qa">
         <h3>How do I restore Pro?</h3>
-        <p>Open a Gridblitz Pro offer from Home, Skins or Settings and choose Restore purchase.
+        <p>Open the Gridblitz Pro panel from Home or Settings and choose Restore Purchases.
         Use the same Apple Account that bought Pro. It is a one-time purchase, with no subscription.</p>
       </div>
       <div class="qa">
-        <h3>My scores aren't showing on the leaderboard.</h3>
-        <p>Make sure you're signed in to Game Center in <code>Settings &rarr; Game Center</code>, and
-        that you have a network connection. Scores earned offline are submitted the next time you're
-        online and signed in.</p>
+        <h3>How do I join the leaderboards?</h3>
+        <p>In version 2.0.0, finish a round with Leaderboards on in Settings &gt; Privacy. A device-bound guest account joins automatically, with no login or email. Choose a player name; names and scores are public. Original and Blitz each have all-time and weekly boards.</p>
+      </div>
+      <div class="qa">
+        <h3>My scores aren&#x27;t showing on the leaderboard.</h3>
+        <p>In version 2.0.0, check your connection and that Leaderboards are on in Settings &gt; Privacy. Finished rounds saved while the feature is on retry posting when you are online. Rounds finished with Leaderboards off stay local. Earlier versions require Game Center sign-in for online scores.</p>
+      </div>
+      <div class="qa">
+        <h3>How do I leave or delete my leaderboard data?</h3>
+        <p>In version 2.0.0, turn Leaderboards off in Settings &gt; Privacy and confirm, or choose Delete leaderboard account on the Leaderboards screen. This deletes the guest account and posted scores; local progress stays. Deletion needs a connection. If the app reports a failure, retry when online.</p>
+      </div>
+      <div class="qa" id="name-report">
+        <h3>How do I report or hide a player?</h3>
+        <p>In version 2.0.0, tap another player&#x27;s leaderboard row and choose Report name or Hide player. Report name copies the name, board, date and player identifier when available, then opens this page. Paste the report into a message and send it using the contact button below; no report is sent automatically. Hide applies on this device. Settings &gt; Privacy &gt; Hidden players &gt; Show all shows them again.</p>
+      </div>
+      <div class="qa" id="support-data">
+        <h3>How can I request deletion of a support message?</h3>
+        <p>Use the contact button below to request deletion of support correspondence. We respond without undue delay, normally within one month. The privacy policy describes the 90-day retention after an issue is resolved.</p>
       </div>
       <div class="qa">
         <h3>Will I lose my progress or unlocked skins?</h3>
-        <p>Your best scores and unlocked skins are stored on your device. Deleting the app clears that
-        local data. Leaderboard scores live with Game Center and stay tied to your Apple account.</p>
+        <p>The update keeps your scores, skins, settings and saved round. Local progress is stored on your device; deleting the app clears that local data. Turning Leaderboards off deletes online account data while keeping local progress. Existing Pro owners keep Pro; in version 2.0.0 it includes every skin, the Customizer, no ads and one ad-free revive per round.</p>
       </div>
       <div class="qa">
         <h3>Does Gridblitz cost anything?</h3>
-        <p>Gridblitz is free to download and play, works offline, and has no accounts or sign-ups.
+        <p>Gridblitz is free to download and play, works offline, and needs no login or sign-up. Version 2.0.0 creates a guest account for online leaderboards unless you turn them off.
         Gridblitz Pro is an optional one-time purchase that removes all ads and includes every block
         and board skin and one ad-free revive per run. The app shows the current price in your local currency.</p>
       </div>
@@ -154,7 +168,7 @@
   </section>
 
   <section>
-    <div class="contact">
+    <div class="contact" id="contact">
       <h3>Still stuck?</h3>
       <p>For help, bug reports, or feedback, send us a note &mdash; we read every message.</p>
       <a class="mailbtn" href="mailto:hej@valorstudio.se?subject=Gridblitz%20support">
